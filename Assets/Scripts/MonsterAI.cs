@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MonsterAI : MonoBehaviour
 {
     public Text healthText;
+    public Text nameText;
     public Slider healthSlider;
     public int health = 20;
     public int maxHealth = 20;
@@ -13,6 +14,8 @@ public class MonsterAI : MonoBehaviour
     public void Start()
     {
         healthSlider.maxValue = maxHealth;
+        nameText.text = $"{gameObject.name}";
+        UpdateUI();
     }
 
     public void Damage(int dmgAmount)
@@ -29,7 +32,7 @@ public class MonsterAI : MonoBehaviour
 
     public void UpdateUI()
     {
-        healthText.text = $"Health: {health}/{maxHealth}";
+        healthText.text = $"HP: {health}/{maxHealth}";
         healthSlider.value = health;
     }
 }
