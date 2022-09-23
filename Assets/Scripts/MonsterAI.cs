@@ -10,12 +10,28 @@ public class MonsterAI : MonoBehaviour
     public Slider healthSlider;
     public int health = 20;
     public int maxHealth = 20;
+    public MonState monState;
 
     public void Start()
     {
         healthSlider.maxValue = maxHealth;
         nameText.text = $"{gameObject.name}";
         UpdateUI();
+    }
+
+    public void Update()
+    {
+        switch (monState)
+        {
+            case MonState.Aggressive:
+                break;
+            case MonState.Defensive:
+                break;
+            case MonState.Dead:
+                break;
+            default:
+                break;
+        }
     }
 
     public void Damage(int dmgAmount)
@@ -35,4 +51,11 @@ public class MonsterAI : MonoBehaviour
         healthText.text = $"HP: {health}/{maxHealth}";
         healthSlider.value = health;
     }
+}
+
+public enum MonState
+{
+    Aggressive,
+    Defensive,
+    Dead
 }
