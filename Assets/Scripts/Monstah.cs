@@ -16,6 +16,8 @@ public class Monstah : MonoBehaviour
 
     public void Start()
     {
+        nameText.text = name;
+        healthSlider.maxValue = maxHealth;
         UpdateUI();
     }
 
