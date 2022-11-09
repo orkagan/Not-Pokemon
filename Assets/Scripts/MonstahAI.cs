@@ -7,10 +7,12 @@ public class MonstahAI : MonoBehaviour
 {
     public enum State
     {
-        Bored,
-        Amused,
-        Serious,
-        AllOut,
+        //Phase 1
+        Bored, //hp>=50
+        Amused, //hp<50
+        //Phase 2 second health bar
+        Serious, //hp>=50
+        AllOut, //hp<50
         Dead
     }
     [SerializeField] private State _state;
@@ -46,27 +48,64 @@ public class MonstahAI : MonoBehaviour
     }
     private IEnumerator BoredState()
     {
-        yield return null; //stick this in a while loop
+        Debug.Log("State: " + _state);
+        while (_state == State.Bored)
+        {
+            //state transitions
+            if (monstah.health < 50) _state = State.Amused;
+
+
+            yield return null;
+        }
         NextState();
     }
 
     private IEnumerator AmusedState()
     {
-        yield return null;
+        Debug.Log("State: "+_state);
+        while (_state == State.Amused)
+        {
+            //state transitions
+            if (monstah.health >= 50) _state = State.Bored;
+            if (monstah.health <= 0) _state = State.Serious;
+
+            
+            yield return null;
+        }
         NextState();
     }
     private IEnumerator SeriousState()
     {
-        yield return null;
+        Debug.Log("State: " + _state);
+        //do stuff to setup second phase
+        monstah.maxHealth *= 2;
+        monstah.Heal(monstah.maxHealth);
+        monstah.healthSlider.transform.localScale *= 2;
+
+        while (_state == State.Serious)
+        {
+            //state transitions
+            if (monstah.health < 50) _state = State.AllOut;
+
+            yield return null;
+        }
         NextState();
     }
     private IEnumerator AllOutState()
     {
-        yield return null;
+        Debug.Log("State: " + _state);
+        while (_state == State.AllOut)
+        {
+            //state transitions
+            if (monstah.health <= 0) _state = State.Dead;
+
+            yield return null;
+        }
         NextState();
     }
     private IEnumerator DeadState()
     {
+        Debug.Log("State: " + _state);
         yield return null;
         NextState();
     }

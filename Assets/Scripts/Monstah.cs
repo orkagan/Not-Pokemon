@@ -46,6 +46,7 @@ public class Monstah : MonoBehaviour
     public void UpdateUI()
     {
         healthText.text = $"HP: {health}/{maxHealth}";
+        healthSlider.maxValue = maxHealth;
         healthSlider.value = health;
     }
 }
