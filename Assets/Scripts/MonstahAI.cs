@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Monstah))] //Need a monstah script for AI to run on
 public class MonstahAI : MonoBehaviour
 {
     public enum State
