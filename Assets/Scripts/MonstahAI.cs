@@ -24,10 +24,10 @@ public class MonstahAI : MonoBehaviour
     private void Start()
     {
         monstah = GetComponent<Monstah>();
+        GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         phase2 = false;
-        NextState();
     }
-    private void NextState()
+    public void NextState()
     {
         switch (_state)
         {
@@ -42,11 +42,9 @@ public class MonstahAI : MonoBehaviour
                 break;
             case State.AllOut:
                 StartCoroutine(AllOutState());
-                BattleHandler.Instance.battleLog.text = $"{monstah.name} is going all out!";
                 break;
             case State.Dead:
                 StartCoroutine(DeadState());
-                BattleHandler.Instance.battleLog.text = $"{monstah.name} defeated. You Win!";
                 break;
             default:
                 Debug.Log("404 State not found, State does not exist in NextState() function, stopping statemachine \n_state: " + _state);
@@ -90,7 +88,7 @@ public class MonstahAI : MonoBehaviour
         if (!phase2)
         {
             //change values
-            monstah.maxHealth *= 3;
+            monstah.maxHealth *= 2;
             monstah.Heal(monstah.maxHealth);
 
             //UI stuff
@@ -102,9 +100,11 @@ public class MonstahAI : MonoBehaviour
             monstah.healthText.font = dsFont;
             monstah.nameText.font = dsFont;
             monstah.nameText.fontSize = 25;
-            name = "Boss Qube of the Third Dimension";
+            name = "Qube of the Third Dimension";
             monstah.nameText.text = monstah.name;
             monstah.UpdateUI();
+            //add shadows
+            GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             //battle log message
             BattleHandler.Instance.battleLog.text = $"What? Enemy Skware was actually a {monstah.name}!";
             phase2 = true;
@@ -124,6 +124,7 @@ public class MonstahAI : MonoBehaviour
     private IEnumerator AllOutState()
     {
         Debug.Log("State: " + _state);
+        BattleHandler.Instance.battleLog.text = $"{monstah.name} is going all out!";
         while (_state == State.AllOut)
         {
             //state transitions
@@ -136,6 +137,7 @@ public class MonstahAI : MonoBehaviour
     private IEnumerator DeadState()
     {
         Debug.Log("State: " + _state);
+        BattleHandler.Instance.NextState();
         //add physics for a quick death "animation"
         if (GetComponent<Rigidbody>() == null)
         {

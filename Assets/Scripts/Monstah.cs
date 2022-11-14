@@ -6,18 +6,22 @@ using UnityEngine.UI;
 public class Monstah : MonoBehaviour
 {
     //Stat variables
-    public int health = 100;
-    public int maxHealth = 100;
-    public bool shielded = false;
+    public int health = 50;
+    public int maxHealth = 50;
+    public bool shielded;
+    public bool charged;
 
     //UI object references
     public Slider healthSlider;
     public Text nameText;
     public Text healthText;
+    public GameObject shield;
 
     public void Start()
     {
         nameText.text = name;
+        shielded = false;
+        charged = false;
         UpdateUI();
     }
 
@@ -33,7 +37,7 @@ public class Monstah : MonoBehaviour
 
     public void Damage(int dmgAmount)
     {
-        if (shielded)
+        if (shielded && dmgAmount>0)
         {
             shielded = false;
         }
@@ -52,6 +56,19 @@ public class Monstah : MonoBehaviour
     public void Shield()
     {
         shielded = true;
+        UpdateUI();
+    }
+    public void Charge(Monstah target, int dmgAmount)
+    {
+        if (!charged)
+        {
+            charged = true;
+        }
+        else
+        {
+            Attack(target, dmgAmount);
+            charged = false;
+        }
     }
 
     public void UpdateUI()
@@ -59,5 +76,7 @@ public class Monstah : MonoBehaviour
         healthText.text = $"HP: {health}/{maxHealth}";
         healthSlider.maxValue = maxHealth;
         healthSlider.value = health;
+        if (shielded) shield.SetActive(true);
+        else shield.SetActive(false);
     }
 }
