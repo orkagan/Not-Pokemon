@@ -47,7 +47,7 @@ public class MonstahAI : MonoBehaviour
                 StartCoroutine(DeadState());
                 break;
             default:
-                Debug.Log("404 State not found, State does not exist in NextState() function, stopping statemachine \n_state: " + _state);
+                Debug.Log("404 State not found stopping statemachine \n_state: " + _state);
                 break;
         }
     }

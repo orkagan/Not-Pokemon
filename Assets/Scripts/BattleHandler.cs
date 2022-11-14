@@ -63,14 +63,9 @@ public class BattleHandler : MonoBehaviour
 
     public void NextState()
     {
-        if (_enemy.monstah.health<=0 && _enemy.phase2)
-        {
-            _gameState = GameState.Win;
-        }
-        else if (_player.monstah.health <= 0)
-        {
-            _gameState = GameState.Lose;
-        }
+        if (_enemy.monstah.health<=0 && _enemy.phase2) _gameState = GameState.Win;
+        else if (_player.monstah.health <= 0) _gameState = GameState.Lose;
+
         switch (_gameState)
         {
             case GameState.Setup:
