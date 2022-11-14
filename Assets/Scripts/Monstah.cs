@@ -8,16 +8,16 @@ public class Monstah : MonoBehaviour
     //Stat variables
     public int health = 100;
     public int maxHealth = 100;
+    public bool shielded = false;
 
     //UI object references
-    public Text healthText;
-    public Text nameText;
     public Slider healthSlider;
+    public Text nameText;
+    public Text healthText;
 
     public void Start()
     {
         nameText.text = name;
-        healthSlider.maxValue = maxHealth;
         UpdateUI();
     }
 
@@ -33,14 +33,25 @@ public class Monstah : MonoBehaviour
 
     public void Damage(int dmgAmount)
     {
-        health -= dmgAmount;
-        health = Mathf.Clamp(health, 0, maxHealth);
+        if (shielded)
+        {
+            shielded = false;
+        }
+        else
+        {
+            health -= dmgAmount;
+            health = Mathf.Clamp(health, 0, maxHealth);
+        }
         UpdateUI();
     }
 
     public void Heal(int healAmount)
     {
         Damage(-healAmount);
+    }
+    public void Shield()
+    {
+        shielded = true;
     }
 
     public void UpdateUI()

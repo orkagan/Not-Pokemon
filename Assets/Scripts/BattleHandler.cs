@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleHandler : MonoBehaviour
 {
+    public Text battleLog;
+    
     //Game state enum
     GameState _gameState;
     enum GameState
     {
-        Start,
+        Setup,
         PlayerTurn,
         EnemyTurn,
         Win,
@@ -38,15 +41,34 @@ public class BattleHandler : MonoBehaviour
     {
         Instance = this; //sets the static class instance
     }
-    // Start is called before the first frame update
+
     void Start()
     {
-        _gameState = GameState.Start;
+        _gameState = GameState.Setup;
     }
 
-    // Update is called once per frame
-    void Update()
+    void NextState()
+    {
+        switch (_gameState)
+        {
+            case GameState.Setup:
+                break;
+            case GameState.PlayerTurn:
+                break;
+            case GameState.EnemyTurn:
+                break;
+            case GameState.Win:
+                break;
+            case GameState.Lose:
+                break;
+            default:
+                break;
+        }
+    }
+
+    IEnumerator Setup()
     {
         
+        yield return null;
     }
 }
