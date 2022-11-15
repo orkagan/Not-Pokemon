@@ -23,7 +23,7 @@ public class BattleHandler : MonoBehaviour
         Lose
     }
 
-    ///Singleton Setup
+    #region Singleton Setup
     private static BattleHandler _instance;
     public static BattleHandler Instance
     {
@@ -46,6 +46,7 @@ public class BattleHandler : MonoBehaviour
     {
         Instance = this; //sets the static class instance
     }
+    #endregion
 
     void Start()
     {
@@ -58,7 +59,6 @@ public class BattleHandler : MonoBehaviour
             _enemy = enemy.GetComponent<MonstahAI>();
         }
         NextState();
-
     }
 
     public void NextState()
@@ -93,25 +93,43 @@ public class BattleHandler : MonoBehaviour
         //do setup stuff
         ClickableMoveButts(false);
         battleLog.text = $"A wild {enemy.name} has showed up.";
-        yield return new WaitForSeconds(4f);
-        _enemy.NextState();
+        yield return new WaitForSeconds(3f);
         _gameState = GameState.PlayerTurn;
         NextState();
     }
     IEnumerator PlayerTurn()
     {
-        ClickableMoveButts(true);
+        //if charging last turn then do charge attack
+        if (_player.monstah.charged)
+        {
+            _player.Charge();
+            PlayerTurnOver();
+        }
+        else
+        {
+            ClickableMoveButts(true);
+        }
         yield return null;
     }
     IEnumerator EnemyTurn()
     {
-        ClickableMoveButts(false);
-        _enemy.NextState();
+        yield return new WaitForSeconds(2); //short delay to show off player's move
+        //if charging last turn then do charge attack
+        if (_enemy.monstah.charged)
+        {
+            _enemy.monstah.Charge(_player.monstah, _enemy.chargeDmg);
+            EnemyTurnOver();
+        }
+        else
+        {
+            _enemy.NextState(); //run enemy state machine logic
+        }
         yield return null;
     }
     IEnumerator Win()
     {
         ClickableMoveButts(false);
+        _enemy.NextState();
         battleLog.text = $"{enemy.name} defeated.\nYou Win!";
         yield return null;
     }
@@ -129,5 +147,28 @@ public class BattleHandler : MonoBehaviour
         {
             butt.interactable = interactivity;
         }
+    }
+    public void PlayerTurnOver()
+    {
+        ClickableMoveButts(false);
+        _gameState = GameState.EnemyTurn;
+        if (_enemy.monstah.shielded)
+        {
+            _enemy.monstah.shielded = false; //opponent's shields wear off after a turn is over
+            _enemy.monstah.UpdateUI();
+            battleLog.text = $"{enemy.name}'s shield has worn off.";
+        }
+        NextState();
+    }
+    public void EnemyTurnOver()
+    {
+        _gameState = GameState.PlayerTurn;
+        if (_player.monstah.shielded)
+        {
+            _player.monstah.shielded = false; //opponent's shields wear off after a turn is over
+            _player.monstah.UpdateUI();
+            battleLog.text = $"{player.name}'s shield has worn off.";
+        }
+        NextState();
     }
 }

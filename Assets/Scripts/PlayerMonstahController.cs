@@ -5,6 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Monstah))] //Need a monstah script for player to control
 public class PlayerMonstahController : MonoBehaviour
 {
+    public int
+        tackleDmg = 10,
+        chargeDmg = 30,
+        healAmt = 10;
+    
     public Monstah monstah;
     public GameObject enemy;
     Monstah _enemyMon;
@@ -14,25 +19,25 @@ public class PlayerMonstahController : MonoBehaviour
         _enemyMon = enemy.GetComponent<Monstah>();
     }
 
-    public void Tackle(int dmgAmount) 
+    public void Tackle() 
     {
-        monstah.Attack(_enemyMon, dmgAmount);
-        BattleHandler.Instance.NextState();
+        monstah.Tackle(_enemyMon, tackleDmg);
+        BattleHandler.Instance.PlayerTurnOver();
     }
-    public void Heal(int healAmount) 
+    public void Heal() 
     {
-        monstah.Heal(healAmount);
-        BattleHandler.Instance.NextState();
+        monstah.Heal(healAmt);
+        BattleHandler.Instance.PlayerTurnOver();
     }
     public void Shield()
     {
         monstah.Shield();
-        BattleHandler.Instance.NextState();
+        BattleHandler.Instance.PlayerTurnOver();
     }
-    public void Charge(int dmgAmount)
+    public void Charge()
     {
-        monstah.Charge(_enemyMon, dmgAmount);
-        BattleHandler.Instance.NextState();
+        monstah.Charge(_enemyMon, chargeDmg);
+        BattleHandler.Instance.PlayerTurnOver();
     }
     public void Die()
     {

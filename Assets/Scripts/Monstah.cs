@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Reflection;
 
 public class Monstah : MonoBehaviour
 {
@@ -29,33 +30,38 @@ public class Monstah : MonoBehaviour
     {
 
     }
-    public void Attack(Monstah target, int dmgAmount)
+    public void Tackle(Monstah target, int dmgAmount)
     {
-        target.Damage(dmgAmount);
+        if (target.shielded && dmgAmount > 0)
+        {
+            target.shielded = false;
+            BattleHandler.Instance.battleLog.text = $"{name}'s {MethodBase.GetCurrentMethod().Name} was blocked by a shield.";
+        }
+        else
+        {
+            target.Damage(dmgAmount);
+            BattleHandler.Instance.battleLog.text = $"{name} used {MethodBase.GetCurrentMethod().Name}.";
+        }
         UpdateUI();
+        target.UpdateUI();
     }
 
     public void Damage(int dmgAmount)
     {
-        if (shielded && dmgAmount>0)
-        {
-            shielded = false;
-        }
-        else
-        {
-            health -= dmgAmount;
-            health = Mathf.Clamp(health, 0, maxHealth);
-        }
+        health -= dmgAmount;
+        health = Mathf.Clamp(health, 0, maxHealth);
         UpdateUI();
     }
 
     public void Heal(int healAmount)
     {
         Damage(-healAmount);
+        BattleHandler.Instance.battleLog.text = $"{name} used {MethodBase.GetCurrentMethod().Name}.";
     }
     public void Shield()
     {
         shielded = true;
+        BattleHandler.Instance.battleLog.text = $"{name} used {MethodBase.GetCurrentMethod().Name}.";
         UpdateUI();
     }
     public void Charge(Monstah target, int dmgAmount)
@@ -63,12 +69,25 @@ public class Monstah : MonoBehaviour
         if (!charged)
         {
             charged = true;
+            BattleHandler.Instance.battleLog.text = $"{name} starts charging an attack.";
         }
         else
         {
-            Attack(target, dmgAmount);
+            if (target.shielded && dmgAmount > 0)
+            {
+                target.shielded = false;
+                BattleHandler.Instance.battleLog.text = $"{name}'s {MethodBase.GetCurrentMethod().Name} was blocked by a shield.";
+                target.UpdateUI();
+            }
+            else
+            {
+                target.Damage(dmgAmount);
+                BattleHandler.Instance.battleLog.text = $"{name} fires a charged beam.";
+            }
             charged = false;
         }
+        UpdateUI();
+        target.UpdateUI();
     }
 
     public void UpdateUI()

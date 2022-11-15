@@ -478,7 +478,7 @@ MonoBehaviour:
       - m_Target: {fileID: 977842008}
         m_TargetAssemblyTypeName: PlayerMonstahController, Assembly-CSharp
         m_MethodName: Tackle
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1176,7 +1176,7 @@ MonoBehaviour:
       - m_Target: {fileID: 977842008}
         m_TargetAssemblyTypeName: PlayerMonstahController, Assembly-CSharp
         m_MethodName: Charge
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1531,7 +1531,7 @@ GameObject:
   - component: {fileID: 977842008}
   m_Layer: 0
   m_Name: Sir Kel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1548,8 +1548,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b45b9e3ce8085e8468247ce94e946ab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 50
-  maxHealth: 50
+  health: 100
+  maxHealth: 100
   shielded: 0
   charged: 0
   healthSlider: {fileID: 1067389401}
@@ -1635,6 +1635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92f835bb155fc849bf1fd43d1175874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tackleDmg: 15
+  chargeDmg: 30
+  healAmt: 20
   monstah: {fileID: 0}
   enemy: {fileID: 1035646945}
 --- !u!1 &1006714980
@@ -1896,8 +1899,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf97f10e309fac54e84a703189d6105e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tackleDmg: 5
+  chargeDmg: 15
+  healAmt: 5
   _state: 0
   monstah: {fileID: 0}
+  player: {fileID: 977842003}
   rotateSpeed: {x: 5, y: 10, z: 3}
   rotateSpeedMax: 30
   phase2: 0
@@ -1955,10 +1962,10 @@ RectTransform:
   m_Father: {fileID: 213311792}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -245.1, y: 78.600006}
-  m_SizeDelta: {x: 402.38, y: 101}
+  m_AnchoredPosition: {x: 212.89996, y: 78.600006}
+  m_SizeDelta: {x: -513.62, y: 101}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1064396796
 MonoBehaviour:
@@ -2948,7 +2955,7 @@ MonoBehaviour:
       - m_Target: {fileID: 977842008}
         m_TargetAssemblyTypeName: PlayerMonstahController, Assembly-CSharp
         m_MethodName: Heal
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
