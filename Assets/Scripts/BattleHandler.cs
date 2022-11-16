@@ -93,7 +93,7 @@ public class BattleHandler : MonoBehaviour
     {
         //do setup stuff
         ClickableMoveButts(false);
-        battleLog.text = $"A wild {enemy.name} has showed up.";
+        battleLog.text = $"{player.name} is squaring off against a wild {enemy.name}.";
         yield return new WaitForSeconds(3f);
         _gameState = GameState.PlayerTurn;
         NextState();
