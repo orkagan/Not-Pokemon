@@ -69,7 +69,7 @@ public class MonstahAI : MonoBehaviour
         ChooseMove(4,2,0,0);
         yield return new WaitForSeconds(2); // delay to show off enemy move
 
-        BattleHandler.Instance.battleLog.text = $"{monstah.name} is looking bored.";
+        BattleHandler.Instance.battleLog.text += $"\n{monstah.name} is looking bored.";
         BattleHandler.Instance.EnemyTurnOver();
         yield return null;
     }
@@ -85,7 +85,7 @@ public class MonstahAI : MonoBehaviour
         ChooseMove(4, 2, 1, 0);
         yield return new WaitForSeconds(2); // delay to show off enemy move
 
-        BattleHandler.Instance.battleLog.text = $"{monstah.name} is looking amused.";
+        BattleHandler.Instance.battleLog.text += $"\n{monstah.name} is looking amused.";
         BattleHandler.Instance.EnemyTurnOver();
         yield return null;
     }
@@ -95,10 +95,10 @@ public class MonstahAI : MonoBehaviour
         //transition into second phase if not already in
         if (!phase2)
         {
-            BattleHandler.Instance.battleLog.text = $"{name} defeated.\nYou Win!"; //fake win
+            BattleHandler.Instance.battleLog.text = $"{name} defeated."; //fake win
             yield return new WaitForSeconds(1); //short delay fake out
             StartPhase2();
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(4);
         }
         //state transitions
         if (monstah.health < monstah.maxHealth/2) { _state = State.AllOut; NextState(); yield break; }
@@ -107,7 +107,7 @@ public class MonstahAI : MonoBehaviour
         ChooseMove(3, 1, 1, 3);
         yield return new WaitForSeconds(2); // delay to show off enemy move
 
-        BattleHandler.Instance.battleLog.text = $"{monstah.name} is getting serious.";
+        BattleHandler.Instance.battleLog.text += $"\n{monstah.name} is getting serious.";
         BattleHandler.Instance.EnemyTurnOver();
         yield return null;
     }
@@ -118,11 +118,14 @@ public class MonstahAI : MonoBehaviour
         //state transitions
         if (monstah.health <= 0) { _state = State.Dead; NextState(); yield break; }
 
+        //every turn enemy does a bit more damage
+        tackleDmg+=1;
+        chargeDmg+=2;
         //make move
-        ChooseMove(3, 0, 0, 5);
+        ChooseMove(3, 0, 0, 5); //enemy stops healing altogether (by having weights for heal and shield be 0)
         yield return new WaitForSeconds(2); // delay to show off enemy move
 
-        BattleHandler.Instance.battleLog.text = $"{monstah.name} is going all out!";
+        BattleHandler.Instance.battleLog.text += $"\n{monstah.name} is going all out!";
         BattleHandler.Instance.EnemyTurnOver();
         yield return null;
     }
@@ -136,7 +139,6 @@ public class MonstahAI : MonoBehaviour
             phse2objRB.AddForce(50,150,-100);
             //BattleHandler end game stuff
             Destroy(gameObject, 3);
-            NextState();
         }
         yield return null;
     }
@@ -146,7 +148,7 @@ public class MonstahAI : MonoBehaviour
         if(phase2 && _state!=State.Dead)
         {
             transform.Rotate(rotateSpeed * Time.deltaTime);
-            if (rotateSpeed.x < rotateSpeedMax && _state==State.Serious) rotateSpeed *= 1.05f;
+            if (rotateSpeed.x < rotateSpeedMax && _state==State.Serious) rotateSpeed *= 1.01f;
             if (rotateSpeed.x < rotateSpeedMax * 10 && _state == State.AllOut) rotateSpeed *= 1.05f;
         }
     }
@@ -172,6 +174,9 @@ public class MonstahAI : MonoBehaviour
         foreach (int i in weights) totalWeight += i;
         int roll = Random.Range(1, totalWeight+1);
 
+        //so it kinda works like a dice table ie. if the roll is
+        //1 to tackleWeight choose tackle
+        //tackleWeight+1 to (cumulative sum)+healWeight choose heal, etc.
         //increments x over weight values until the roll value is found, then sets moveIndex
         int moveIndex = 0;
         int x = 0;
@@ -185,7 +190,7 @@ public class MonstahAI : MonoBehaviour
                 break;
             }
         }
-
+        //do the move based on the chosen number
         switch (moveIndex)
         {
             case 0:
@@ -227,6 +232,7 @@ public class MonstahAI : MonoBehaviour
         //change font
         Font dsFont = Resources.Load<Font>("Fonts/OptimusPrinceps");
         monstah.healthText.font = dsFont;
+        monstah.healthText.fontSize = 20;
         monstah.nameText.font = dsFont;
         monstah.nameText.fontSize = 25;
         name = "Qube of the Third Dimension";
@@ -235,7 +241,7 @@ public class MonstahAI : MonoBehaviour
         //add shadows
         GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
         //battle log message
-        BattleHandler.Instance.battleLog.text = $"What? Enemy Skware was actually a {monstah.name}!";
+        BattleHandler.Instance.battleLog.text = $"Wait what?! Enemy Skware was actually a {monstah.name}!";
         phase2 = true;
     }
 }

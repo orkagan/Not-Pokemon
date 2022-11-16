@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleHandler : MonoBehaviour
 {
@@ -130,13 +131,13 @@ public class BattleHandler : MonoBehaviour
     {
         ClickableMoveButts(false);
         _enemy.NextState();
-        battleLog.text = $"{enemy.name} defeated.\nYou Win!";
+        battleLog.text = $"{enemy.name} defeated.\nYou Win!\n\nPress \'R\' to restart";
         yield return null;
     }
     IEnumerator Lose()
     {
         ClickableMoveButts(false);
-        battleLog.text = $"{player.name} has passed out.\nYou lose.";
+        battleLog.text = $"{player.name} has passed out.\nYou lose.\n\nPress \'R\' to restart";
         _player.Die();
         yield return null;
     }
@@ -156,7 +157,7 @@ public class BattleHandler : MonoBehaviour
         {
             _enemy.monstah.shielded = false; //opponent's shields wear off after a turn is over
             _enemy.monstah.UpdateUI();
-            battleLog.text = $"{enemy.name}'s shield has worn off.";
+            battleLog.text += $"\n{enemy.name}'s shield has worn off.";
         }
         NextState();
     }
@@ -167,8 +168,18 @@ public class BattleHandler : MonoBehaviour
         {
             _player.monstah.shielded = false; //opponent's shields wear off after a turn is over
             _player.monstah.UpdateUI();
-            battleLog.text = $"{player.name}'s shield has worn off.";
+            battleLog.text += $"\n{player.name}'s shield has worn off.";
         }
         NextState();
+    }
+    private void Update()
+    {
+        if(_gameState == GameState.Win || _gameState == GameState.Lose)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        }
     }
 }
