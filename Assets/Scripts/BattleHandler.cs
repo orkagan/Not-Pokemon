@@ -103,8 +103,7 @@ public class BattleHandler : MonoBehaviour
         //if charging last turn then do charge attack
         if (_player.monstah.charged)
         {
-            _player.Charge();
-            PlayerTurnOver();
+            _player.Charge(); //Calls the charge of playerController which ends turn
         }
         else
         {
@@ -119,6 +118,7 @@ public class BattleHandler : MonoBehaviour
         if (_enemy.monstah.charged)
         {
             _enemy.monstah.Charge(_player.monstah, _enemy.chargeDmg);
+            //Calls monstah Charge function directly so have to manually end turn
             EnemyTurnOver();
         }
         else
